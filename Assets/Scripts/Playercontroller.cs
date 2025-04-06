@@ -61,17 +61,23 @@ public class Playercontroller : MonoBehaviour
     void Update()
     {
         if (Keyboard.current.spaceKey.wasPressedThisFrame)
-        {
-            if (isGrounded || jumpCount < 2)
-            {
-                rb.linearVelocity = new Vector3(rb.linearVelocity.x, 0f, rb.linearVelocity.z); 
-                rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-                jumpCount++;
-
-                if (isGrounded)
-                    isGrounded = false;
-            }
-        }
+{
+    if (isGrounded && jumpCount == 0)
+    {
+        // First jump from ground
+        rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+        rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        jumpCount = 1;
+        isGrounded = false;
+    }
+    else if (!isGrounded && jumpCount == 1)
+    {
+        // Double jump
+        rb.velocity = new Vector3(rb.velocity.x, 0f, rb.velocity.z);
+        rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+        jumpCount = 2;
+    }
+}
     }
 
     void OnCollisionEnter(Collision collision)
